@@ -1,3 +1,4 @@
+# Using dataset from Learning Multiple Layers of Features from Tiny Images, Alex Krizhevsky, 2009.
 import pickle
 import numpy
 
@@ -9,8 +10,7 @@ with open(file + "/data_batch_1", "rb") as fo:
 print(type(dict))
 for i in dict:
     print(i)
+    print(type(dict[i]))
 
 labels = dict[b'labels']
 data = dict[b'data']
-print(data)
-print(type(data))
