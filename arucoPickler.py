@@ -43,10 +43,10 @@ fileNames = trueFileNames + falseFileNames
 batch = sys.argv[1] #takes a commandline arg for this
 
 dict = {
-    "batch_label": batch,
-    "labels": labels,
-    "data": images,
-    "filenames": fileNames
+    b"batch_label": batch,
+    b"labels": labels,
+    b"data": images,
+    b"filenames": fileNames
 }
 
 pickle.dump(dict, open("Aruco/data_batch_" + batch, "wb"))

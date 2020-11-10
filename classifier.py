@@ -7,6 +7,9 @@ dict = 0
 with open(file + "/data_batch_1", "rb") as fo:
     dict = pickle.load(fo, encoding='bytes')
 
+with open("Aruco/data_batch_test", "rb") as fo:
+    dict = pickle.load(fo, encoding='bytes')
+
 print(type(dict))
 for i in dict:
     print(i)
