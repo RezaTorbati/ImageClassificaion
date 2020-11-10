@@ -7,11 +7,14 @@ import sys
 def loadImages(folder):
     images = []
     fileNames = []
+    count = 0
     for file in os.listdir(folder):
         img=cv.imread(os.path.join(folder, file))
         img = cv.resize(img,(32,32))
         imgAr = np.asarray(img[:,:])
 
+        cv.imwrite(folder + str(count) + ".png", img)
+        count += 1
         red = []
         green = []
         blue = []
