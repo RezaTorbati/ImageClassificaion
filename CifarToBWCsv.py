@@ -5,7 +5,7 @@ import pandas as pd
 directory = "cifar-10-batches-py"
 dict = 0
 files = ["data_batch_1", "data_batch_2", "data_batch_3", "data_batch_4", "data_batch_5", "test_batch"]
-
+dfs = []
 for f in files:
     file = directory + "/" + f
     with open(file, "rb") as fo:
@@ -25,3 +25,8 @@ for f in files:
 
     writeName = file + ".csv"
     df.to_csv(writeName, index = False)
+    dfs.append(df)
+
+df = pd.concat(dfs)
+writeName = directory + "/" + "data_batch_full.csv"
+df.to_csv(writeName, index=False)
