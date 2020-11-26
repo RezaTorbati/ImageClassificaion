@@ -1,14 +1,16 @@
 # Questions:
-# Stuff like f test and r^2 still valid for logarithmic?
+# is my linear regression test valid at all?
 # Ideas for interation and/or other ways of making the model better?
 # Do I just get the sigmoid to be able to use the log loss/roc_auc_score and stuff like that?
+# Other important logarithmic tests?
 
 import pandas as pd
 import numpy as np
 import math
 import scipy.stats
 
-#commented out code is for if you don't have the data_batch_full.csv because github won't allow files of that size
+#Training Examples
+#commented out code below is for if you don't have the data_batch_full.csv because github won't allow files of that size
 #df1 = pd.read_csv("cifar-10-batches-py/data_batch_1.csv")
 #df2 = pd.read_csv("cifar-10-batches-py/data_batch_2.csv")
 #df3 = pd.read_csv("cifar-10-batches-py/data_batch_3.csv")
@@ -17,9 +19,10 @@ import scipy.stats
 #df = pd.concat([df1, df2, df3, df4, df5])
 
 df = pd.read_csv("cifar-10-batches-py/data_batch_full.csv")
-
+df.insert(0,'bias',np.ones(len(df)))
+print(df)
 trueDf = df[df.label == 1] #gets all of the examples of an automobile
-falseDf = df[df.label != 1].sample(5000) #gets 5000 examples without an airplane
+falseDf = df[df.label != 1].sample(5000) #gets 5000 examples without an automobile
 falseDf['label'] = 0
 
 trainDf = pd.concat([trueDf, falseDf])
@@ -30,9 +33,9 @@ del xTrain['label']
 xTrainAr = xTrain.to_numpy()
 yTrainAr = yTrain.to_numpy()
 
-weights = np.linalg.inv(xTrainAr.transpose() @ xTrainAr) @ xTrainAr.transpose() @ yTrainAr
-
+#Test Examples
 df2 = pd.read_csv("cifar-10-batches-py/test_batch.csv")
+df2.insert(0,'bias', np.ones(len(df2)))
 testTrueDf = df2[df2.label == 1]
 testFalseDf = df2[df2.label != 1].sample(1000)
 testFalseDf['label'] = 0
@@ -45,8 +48,11 @@ del xTest['label']
 xTestAr = xTest.to_numpy()
 yTestAr = yTest.to_numpy()
 
-def getSigmoid(s):
-    return 1 / (1 + math.exp(-s))
+
+#Linear Regression:
+weights = np.linalg.inv(xTrainAr.transpose() @ xTrainAr) @ xTrainAr.transpose() @ yTrainAr
+
+print("Linear Regression Metrics:")
 
 tp = 0
 fn = 0
@@ -56,8 +62,7 @@ rss = 0
 tss = 0
 for i in range(0, len(yTrainAr)):
     tss += (yTrainAr[i] - yTrainAr.mean()) ** 2
-    
-    #pred = getSigmoid(xTestAr[i] @ weights)
+
     pred = xTrainAr[i] @ weights
     rss += (yTrainAr[i] - pred) ** 2
 
@@ -96,7 +101,6 @@ fn = 0
 tn = 0
 fp = 0
 for i in range(0, len(yTestAr)):
-    #pred = getSigmoid(xTestAr[i] @ weights)
     pred = xTestAr[i] @ weights
 
     sqnPred = 0
@@ -117,3 +121,19 @@ tpr = tp / (tp + fn)
 fpr = 1 - (tn / (tn + fp))
 print("Test True positive rate: ", tpr)
 print("Test False positive rate: ", fpr)
+print()
+
+
+# Logistic Regression:
+#def getGrad(weights):
+#    grad = []
+#    for i in range(0, len(yTrainAr)):
+
+
+#trainingRate = .01
+
+#logWeights = np.zeros(len(xTrainAr[0]))
+#oldLogWeights = np.ones(len(xTrainAr[0]))
+#while np.linalg.norm(logWeights - oldLogWeight) > .00001:
+#    oldLogWeights = logWeights
+
