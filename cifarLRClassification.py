@@ -126,11 +126,17 @@ print("Test False positive rate: ", fpr)
 print()
 
 
-# Logistic Regression:
+# Logistic Regression with Stochastic Gradient Descent:
 def getSigmoid(val):
-    return 1 / (1 + math.exp(-val))
+    try:
+        return 1 / (1 + math.exp(-val))
+    except OverflowError:
+        if val < 0:
+            return 0
+        else:
+            return 1
 
-def getGrad(weights, x, y):
+def getStochasticGrad(weights, x, y):
     grad = np.zeros(len(x))
     sig = getSigmoid(x @ weights)
     coef = sig - y
@@ -138,22 +144,107 @@ def getGrad(weights, x, y):
         grad[i] = (coef * x[i])
     return grad
 
-
 learningRate = .00000002
 logWeights = np.zeros(len(xTrainAr[0]))
 oldLogWeights = np.ones(len(xTrainAr[0]))
 
 samples = np.random.choice(len(yTrain), size = len(yTrain),replace = False)
-count = 1
 for i in samples:
     oldLogWeights = copy.deepcopy(logWeights)
-    logWeights = logWeights - learningRate * getGrad(logWeights, xTrainAr[i], yTrainAr[i])
-    #if np.linalg.norm(logWeights - oldLogWeights) < .000000000000000000001:
+    logWeights = logWeights - learningRate * getStochasticGrad(logWeights, xTrainAr[i], yTrainAr[i])
+    #if np.linalg.norm(logWeights - oldLogWeights) < .000001:
     #    print("breaking ", count)
     #    break
-    #print(count)
-    #count += 1
-print(np.linalg.norm(logWeights - oldLogWeights))
+
+#print(np.linalg.norm(logWeights - oldLogWeights))
+
+print("\nLogistic Metrics with Stochastic Gradient Descent:")
+tp = 0
+fn = 0
+tn = 0
+fp = 0
+pred = np.zeros(len(yTrainAr))
+for i in range(0, len(yTrainAr)):
+    pred[i] = getSigmoid(xTrainAr[i] @ logWeights)
+
+    sqnPred = 0
+    if(pred[i] > .5):
+        sqnPred = 1
+
+    if(yTrainAr[i] == 1 and sqnPred == 1):
+        tp += 1
+    elif(yTrainAr[i] == 1 and sqnPred == 0):
+        fn += 1
+    elif(yTrainAr[i] == 0 and sqnPred == 0):
+        tn += 1
+    else:
+        fp += 1
+
+print("AUC: ", roc_auc_score(yTrainAr, pred))
+print(tp, ", ", fn, ", ", tn, ", ", fp)
+print("Train Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
+tpr = tp / (tp + fn)
+fpr = 1 - (tn / (tn + fp))
+print("Train True positive rate: ", tpr)
+print("Train False positive rate: ", fpr)
+print()
+
+tp = 0
+fn = 0
+tn = 0
+fp = 0
+pred = np.zeros(len(yTestAr))
+for i in range(0, len(yTestAr)):
+    pred[i] = getSigmoid(xTestAr[i] @ logWeights)
+
+    sqnPred = 0
+    if(pred[i] > .5):
+        sqnPred = 1
+
+    if(yTestAr[i] == 1 and sqnPred == 1):
+        tp += 1
+    elif(yTestAr[i] == 1 and sqnPred == 0):
+        fn += 1
+    elif(yTestAr[i] == 0 and sqnPred == 0):
+        tn += 1
+    else:
+        fp += 1
+
+print("AUC: ", roc_auc_score(yTestAr, pred))
+print(tp, ", ", fn, ", ", tn, ", ", fp)
+print("Test Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
+tpr = tp / (tp + fn)
+fpr = 1 - (tn / (tn + fp))
+print("Test True positive rate: ", tpr)
+print("Test False positive rate: ", fpr)
+print()
+
+
+# Logistic Regression with Gradient Descent
+def getGrad(weights, xs, ys):
+    gradMat = np.zeros((len(ys), len(xs[0])))
+    for i in range(0, len(ys)):
+        #sig = getSigmoid(xs[i] @ weights) - ys[i]
+        #coef = sig - ys[i]
+        gradMat[i] = (getSigmoid(xs[i] @ weights) - ys[i]) * xs[i]
+    
+    grad = np.sum(gradMat, axis = 0) / len(gradMat)
+    return grad
+
+learningRate = .0000005
+logWeights = np.zeros(len(xTrainAr[0]))
+oldLogWeights = np.ones(len(xTrainAr[0]))
+
+count = 1
+print("Logistic Training...")
+while True:
+    oldLogWeights = copy.deepcopy(logWeights)
+    logWeights = logWeights - learningRate * getGrad(logWeights, xTrainAr, yTrainAr)
+    if np.linalg.norm(logWeights - oldLogWeights) < .000001 or count > 100: #This is just going to run 100 times...
+        break
+    count += 1
+    if count % 10 == 0:
+        print(count ,"% finished")
 
 print("\nLogistic Metrics:")
 tp = 0
