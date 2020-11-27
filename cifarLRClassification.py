@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import math
 import scipy.stats
+import copy
 
 #Training Examples
 #commented out code below is for if you don't have the data_batch_full.csv because github won't allow files of that size
@@ -20,7 +21,6 @@ import scipy.stats
 
 df = pd.read_csv("cifar-10-batches-py/data_batch_full.csv")
 df.insert(0,'bias',np.ones(len(df)))
-print(df)
 trueDf = df[df.label == 1] #gets all of the examples of an automobile
 falseDf = df[df.label != 1].sample(5000) #gets 5000 examples without an automobile
 falseDf['label'] = 0
@@ -53,7 +53,7 @@ yTestAr = yTest.to_numpy()
 weights = np.linalg.inv(xTrainAr.transpose() @ xTrainAr) @ xTrainAr.transpose() @ yTrainAr
 
 print("Linear Regression Metrics:")
-
+# Tests on training data
 tp = 0
 fn = 0
 tn = 0
@@ -81,13 +81,11 @@ for i in range(0, len(yTrainAr)):
 
 rsq = 1 - rss / tss
 print("R^2: ", rsq)
-
 k = len(weights - 1)
 n = len(yTrainAr)
 f = (rsq / k) / ((1 - rsq) / (n - k - 1))
 p = 1-scipy.stats.f.cdf(f, k, n - k - 1)
 print("F test P value: ", p)
-
 print("Train Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
 tpr = tp / (tp + fn)
 fpr = 1 - (tn / (tn + fp))
@@ -95,7 +93,7 @@ print("Train True positive rate: ", tpr)
 print("Train False positive rate: ", fpr)
 print()
 
-
+# Tests on test data
 tp = 0
 fn = 0
 tn = 0
@@ -125,15 +123,87 @@ print()
 
 
 # Logistic Regression:
-#def getGrad(weights):
-#    grad = []
-#    for i in range(0, len(yTrainAr)):
+def getSigmoid(val):
+    return 1 / (1 + math.exp(-val))
+
+def getGrad(weights, x, y):
+    grad = np.zeros(len(x))
+    sig = getSigmoid(x @ weights)
+    coef = sig - y
+    for i in range(0, len(x)):
+        grad[i] = (coef * x[i])
+    return grad
 
 
-#trainingRate = .01
+learningRate = .00001
+logWeights = np.zeros(len(xTrainAr[0]))
+oldLogWeights = np.ones(len(xTrainAr[0]))
 
-#logWeights = np.zeros(len(xTrainAr[0]))
-#oldLogWeights = np.ones(len(xTrainAr[0]))
-#while np.linalg.norm(logWeights - oldLogWeight) > .00001:
-#    oldLogWeights = logWeights
+samples = np.random.choice(len(yTrain), size = len(yTrain),replace = False)
 
+count = 1
+for i in samples:
+    oldLogWeights = copy.deepcopy(logWeights)
+    logWeights = logWeights - learningRate * getGrad(logWeights, xTrainAr[i], yTrainAr[i])
+    #if np.linalg.norm(logWeights - oldLogWeights) < .000000000000000000001:
+    #    print("breaking ", count)
+    #    break
+    #print(count)
+    #count += 1
+
+print("\nLogistic Metrics:")
+tp = 0
+fn = 0
+tn = 0
+fp = 0
+for i in range(0, len(yTrainAr)):
+    pred = getSigmoid(xTrainAr[i] @ logWeights)
+
+    sqnPred = 0
+    if(pred > .5):
+        sqnPred = 1
+
+    if(yTrainAr[i] == 1 and sqnPred == 1):
+        tp += 1
+    elif(yTrainAr[i] == 1 and sqnPred == 0):
+        fn += 1
+    elif(yTrainAr[i] == 0 and sqnPred == 0):
+        tn += 1
+    else:
+        fp += 1
+
+print(tp, ", ", fn, ", ", tn, ", ", fp)
+print("Train Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
+tpr = tp / (tp + fn)
+fpr = 1 - (tn / (tn + fp))
+print("Train True positive rate: ", tpr)
+print("Train False positive rate: ", fpr)
+print()
+
+tp = 0
+fn = 0
+tn = 0
+fp = 0
+for i in range(0, len(yTestAr)):
+    pred = getSigmoid(xTestAr[i] @ logWeights)
+
+    sqnPred = 0
+    if(pred > .5):
+        sqnPred = 1
+
+    if(yTestAr[i] == 1 and sqnPred == 1):
+        tp += 1
+    elif(yTestAr[i] == 1 and sqnPred == 0):
+        fn += 1
+    elif(yTestAr[i] == 0 and sqnPred == 0):
+        tn += 1
+    else:
+        fp += 1
+
+print(tp, ", ", fn, ", ", tn, ", ", fp)
+print("Test Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
+tpr = tp / (tp + fn)
+fpr = 1 - (tn / (tn + fp))
+print("Test True positive rate: ", tpr)
+print("Test False positive rate: ", fpr)
+print()
