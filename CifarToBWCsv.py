@@ -25,7 +25,9 @@ for f in files:
 
     writeName = file + ".csv"
     df.to_csv(writeName, index = False)
-    dfs.append(df)
+
+    if(f != "test_batch"):
+        dfs.append(df)
 
 df = pd.concat(dfs)
 writeName = directory + "/" + "data_batch_full.csv"

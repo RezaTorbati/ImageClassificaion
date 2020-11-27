@@ -1,4 +1,6 @@
 # Questions:
+# Differences between textbook and notes?
+# What is up with my code (hopefully answered above)
 # is my linear regression test valid at all?
 # Ideas for interation and/or other ways of making the model better?
 # Do I just get the sigmoid to be able to use the log loss/roc_auc_score and stuff like that?
@@ -9,6 +11,8 @@ import numpy as np
 import math
 import scipy.stats
 import copy
+from sklearn.metrics import roc_auc_score
+
 
 #Training Examples
 #commented out code below is for if you don't have the data_batch_full.csv because github won't allow files of that size
@@ -135,12 +139,11 @@ def getGrad(weights, x, y):
     return grad
 
 
-learningRate = .00001
+learningRate = .00000002
 logWeights = np.zeros(len(xTrainAr[0]))
 oldLogWeights = np.ones(len(xTrainAr[0]))
 
 samples = np.random.choice(len(yTrain), size = len(yTrain),replace = False)
-
 count = 1
 for i in samples:
     oldLogWeights = copy.deepcopy(logWeights)
@@ -150,17 +153,19 @@ for i in samples:
     #    break
     #print(count)
     #count += 1
+print(np.linalg.norm(logWeights - oldLogWeights))
 
 print("\nLogistic Metrics:")
 tp = 0
 fn = 0
 tn = 0
 fp = 0
+pred = np.zeros(len(yTrainAr))
 for i in range(0, len(yTrainAr)):
-    pred = getSigmoid(xTrainAr[i] @ logWeights)
+    pred[i] = getSigmoid(xTrainAr[i] @ logWeights)
 
     sqnPred = 0
-    if(pred > .5):
+    if(pred[i] > .5):
         sqnPred = 1
 
     if(yTrainAr[i] == 1 and sqnPred == 1):
@@ -172,6 +177,7 @@ for i in range(0, len(yTrainAr)):
     else:
         fp += 1
 
+print("AUC: ", roc_auc_score(yTrainAr, pred))
 print(tp, ", ", fn, ", ", tn, ", ", fp)
 print("Train Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
 tpr = tp / (tp + fn)
@@ -184,11 +190,12 @@ tp = 0
 fn = 0
 tn = 0
 fp = 0
+pred = np.zeros(len(yTestAr))
 for i in range(0, len(yTestAr)):
-    pred = getSigmoid(xTestAr[i] @ logWeights)
+    pred[i] = getSigmoid(xTestAr[i] @ logWeights)
 
     sqnPred = 0
-    if(pred > .5):
+    if(pred[i] > .5):
         sqnPred = 1
 
     if(yTestAr[i] == 1 and sqnPred == 1):
@@ -200,6 +207,7 @@ for i in range(0, len(yTestAr)):
     else:
         fp += 1
 
+print("AUC: ", roc_auc_score(yTestAr, pred))
 print(tp, ", ", fn, ", ", tn, ", ", fp)
 print("Test Accuracy: ", ((tp + tn) / (tp + fn + tn + fp)))
 tpr = tp / (tp + fn)
