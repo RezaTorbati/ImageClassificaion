@@ -32,11 +32,11 @@ def loadImages(folder):
             fileNames.append(file)
     return images, fileNames
 
-true = loadImages("Aruco/True/")
+true = loadImages("True/")
 trueImages = true[0]
 trueFileNames = true[1]
 
-false = loadImages("Aruco/False/")
+false = loadImages("False/")
 falseImages = false[0]
 falseFileNames = false[1]
 
@@ -52,4 +52,4 @@ dict = {
     b"filenames": fileNames
 }
 
-pickle.dump(dict, open("Aruco/data_batch_" + batch, "wb"))
+pickle.dump(dict, open("data_batch_" + batch, "wb"))

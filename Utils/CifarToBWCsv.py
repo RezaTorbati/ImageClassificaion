@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 import pandas as pd
 
-directory = "cifar-10-batches-py"
+directory = "../cifar-10-batches-py"
 dict = 0
 files = ["data_batch_1", "data_batch_2", "data_batch_3", "data_batch_4", "data_batch_5", "test_batch"]
 dfs = []

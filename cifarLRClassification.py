@@ -1,9 +1,7 @@
 # Questions:
 # Differences between textbook and notes?
-# What is up with my code (hopefully answered above)
 # is my linear regression test valid at all?
 # Ideas for interation and/or other ways of making the model better?
-# Do I just get the sigmoid to be able to use the log loss/roc_auc_score and stuff like that?
 # Other important logarithmic tests?
 
 import pandas as pd
