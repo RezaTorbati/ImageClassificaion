@@ -1,9 +1,3 @@
-# Questions:
-# Differences between textbook and notes?
-# is my linear regression test valid at all?
-# Ideas for interation and/or other ways of making the model better?
-# Other important logarithmic tests?
-
 import pandas as pd
 import numpy as np
 import math
