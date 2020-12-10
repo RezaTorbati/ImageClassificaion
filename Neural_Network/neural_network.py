@@ -4,7 +4,6 @@ from sklearn.metrics import confusion_matrix
 from Utils.load_cifar10_keras import load_dataset
 from Utils.reshape_data import reshape
 
-
 def sigmoid(z):
     try:
         s = 1 / (1 + np.exp(-z))
@@ -62,7 +61,7 @@ def neural_network(X, Y, x_test=None, y_test=None, activation_function='sigmoid'
     if x_test is not None:
         pred = predict(w, b, x_test)
         print("Confusion Matrix =\n", confusion_matrix(y_test, pred))
-        print("train accuracy: {} %".format(100 - np.mean(np.abs(np.array(pred) - np.array(y_test))) * 100))
+        print("test accuracy: {} %".format(100 - np.mean(np.abs(np.array(pred) - np.array(y_test))) * 100))
 
 
 def predict(w, b, X, activation_function='sigmoid'):
