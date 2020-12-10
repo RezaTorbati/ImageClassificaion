@@ -8,14 +8,14 @@ from sklearn.metrics import roc_auc_score
 
 #Training Examples
 #commented out code below is for if you don't have the data_batch_full.csv because github won't allow files of that size
-#df1 = pd.read_csv("cifar-10-batches-py/data_batch_1.csv")
-#df2 = pd.read_csv("cifar-10-batches-py/data_batch_2.csv")
-#df3 = pd.read_csv("cifar-10-batches-py/data_batch_3.csv")
-#df4 = pd.read_csv("cifar-10-batches-py/data_batch_4.csv")
-#df5 = pd.read_csv("cifar-10-batches-py/data_batch_5.csv")
-#df = pd.concat([df1, df2, df3, df4, df5])
+df1 = pd.read_csv("cifar-10-batches-py/data_batch_1.csv")
+df2 = pd.read_csv("cifar-10-batches-py/data_batch_2.csv")
+df3 = pd.read_csv("cifar-10-batches-py/data_batch_3.csv")
+df4 = pd.read_csv("cifar-10-batches-py/data_batch_4.csv")
+df5 = pd.read_csv("cifar-10-batches-py/data_batch_5.csv")
+df = pd.concat([df1, df2, df3, df4, df5])
 
-df = pd.read_csv("cifar-10-batches-py/data_batch_full.csv")
+# df = pd.read_csv("cifar-10-batches-py/data_batch_full.csv")
 df.insert(0,'bias',np.ones(len(df)))
 trueDf = df[df.label == 1] #gets all of the examples of an automobile
 falseDf = df[df.label != 1].sample(5000) #gets 5000 examples without an automobile

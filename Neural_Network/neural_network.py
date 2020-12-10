@@ -1,8 +1,9 @@
 import random
 import numpy as np
 from sklearn.metrics import confusion_matrix
-from Utils.load_cifar10_keras import load_dataset
+from Utils.load_cifar10_keras import load_dataset, load_dataset_aruco
 from Utils.reshape_data import reshape
+
 
 def sigmoid(z):
     try:
@@ -31,7 +32,7 @@ def neural_network(X, Y, x_test=None, y_test=None, activation_function='sigmoid'
     w = np.array([random.uniform(-.05, .05) for _ in range(len(X[0]))])
     b = 0
 
-    for i in range(5000):
+    for i in range(1000):
         m = X.shape[1]
 
         # Forward Propagate
@@ -97,8 +98,12 @@ if __name__ == "__main__":
     y = np.array([1, 0, 1, 0, 1, 0, 1, 0, 0])
     neural_network(x, y)
 
+    # Run on aruco
+    train_x, train_y, test_x, test_y = load_dataset_aruco(1000)
+    neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
+
     # Run on cifar-10
     train_x, train_y, test_x, test_y = load_dataset()
     train_x, train_y, test_x, test_y = reshape(train_x, train_y, test_x, test_y)
-
     neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
+
