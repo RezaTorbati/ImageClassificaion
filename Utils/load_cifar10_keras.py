@@ -1,15 +1,43 @@
 from keras.datasets import cifar10
 from sklearn.utils import shuffle
 import numpy as np
+import pandas as pd
 from pprint import pprint
 
 
 # Loads the CIFAR-10 Dataset and gets it ready for binary classification
 def load_dataset(num=None):
-    (train_x, train_y), (test_x, test_y) = cifar10.load_data()
+    (train_x, train_y), (test_x, test_y) = cifar10.load_data(500)
 
     train_x, train_y = random_equalize(train_x, train_y, num)
     test_x, test_y = random_equalize(test_x, test_y, num)
+
+    return train_x, train_y, test_x, test_y
+
+
+def load_dataset_aruco(num=None):
+    true_values = pd.read_csv("../Aruco/True.csv")
+    true_values['class'] = 1
+    false_values = pd.read_csv("../Aruco/False.csv")
+    false_values['class'] = 0
+
+    aruco_values = true_values.append(false_values)
+    aruco_values = aruco_values.sample(frac=1).reset_index(drop=True)
+
+    train = aruco_values.sample(frac=0.8)
+    test = aruco_values.drop(train.index)
+
+    train = train.reset_index(drop=True)
+    test = test.reset_index(drop=True)
+
+    train_y = train['class'].to_numpy()
+    train_x = train.drop('class', axis=1).to_numpy()
+    test_y = test['class'].to_numpy()
+    test_x = test.drop('class', axis=1).to_numpy()
+
+    if num:
+        train_x = train_x[:num]
+        train_y = train_y[:num]
 
     return train_x, train_y, test_x, test_y
 
@@ -64,3 +92,19 @@ def random_equalize(x, y, num_samples=None):
 
     new_x, new_y = shuffle(x_train, y_train)
     return new_x, new_y
+
+
+if __name__ == "__main__":
+    train_x, train_y, test_x, test_y = load_dataset_aruco()
+    print("Aruco")
+    print(train_y)
+    print(train_x)
+    print(test_y)
+    print(test_x)
+
+    train_x, train_y, test_x, test_y = load_dataset()
+    print("Cifar")
+    print(train_y)
+    print(train_x)
+    print(test_y)
+    print(test_x)

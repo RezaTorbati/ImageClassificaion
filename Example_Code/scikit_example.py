@@ -1,11 +1,11 @@
 import numpy as np
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix, log_loss
-from Utils.load_cifar10_keras import load_dataset
+from Utils.load_cifar10_keras import load_dataset, load_dataset_aruco
 from Utils.reshape_data import reshape
 
-train_x, train_y, test_x, test_y = load_dataset(500)
-train_x, train_y, test_x, test_y = reshape(train_x, train_y, test_x, test_y)
+train_x, train_y, test_x, test_y = load_dataset_aruco()
+# train_x, train_y, test_x, test_y = reshape(train_x, train_y, test_x, test_y)
 
 print("Training Network")
 neural_network = MLPClassifier(hidden_layer_sizes=(50, 50, 50, 50))
