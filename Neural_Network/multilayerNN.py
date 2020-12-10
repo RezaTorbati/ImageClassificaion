@@ -15,8 +15,7 @@ class NeuralNetwork(object):
         self.layers = len(sizes)
         self.sizes = sizes
         self.biases = [np.random.uniform(-.05, .05, (y, 1))  for y in sizes[1:]]
-        self.weights = [np.random.uniform(-.05, .05, (y, x))
-                        for x, y in zip(sizes[:-1], sizes[1:])]
+        self.weights = [np.random.uniform(-.05, .05, (y, x)) for x, y in zip(sizes[:-1], sizes[1:])]
 
     def train(self, trainData, epochs, batchSize, learningRate, testData = None):
         for i in range(0, epochs):
@@ -68,9 +67,12 @@ class NeuralNetwork(object):
 
             delta = (self.weights[-layer + 1].transpose() @ delta) * sig
             nablaB[-layer] = delta
-            print(len(activations[-layer]))
-            print(len(activations[-layer - 1]))
-            print(len(delta))
+            #print(activations[-layer - 1].transpose())
+            #print(delta)
+
+            #print(len(delta[0]))
+            #print(len(activations[-layer - 1].transpose()))
+
             nablaW[-layer] = delta @ activations[-layer - 1].transpose()
 
         return (nablaB, nablaW)
@@ -85,6 +87,7 @@ class NeuralNetwork(object):
         return sum(int(x==y) for (x,y) in results)
 
 # training examples
+'''
 df = pd.read_csv("../cifar-10-batches-py/data_batch_full.csv")
 trueDf = df[df.label == 1] #gets all of the examples of an automobile
 falseDf = df[df.label != 1].sample(5000) #gets 5000 examples without an automobile
@@ -112,6 +115,21 @@ del xTest['label']
 xTestAr = xTest.to_numpy()
 yTestAr = yTest.to_numpy()
 
-nn = NeuralNetwork((1024, 4, 5, 2))
-nn.train(list(zip(xTrainAr, yTrainAr)), 100, 16, .1)
-print(nn.evaluate(zip(xTestAr, yTestAr)))
+##nn = NeuralNetwork((1024, 5, 6, 2))
+##nn.train(list(zip(xTrainAr, yTrainAr)), 100, 16, .1)
+##print(nn.evaluate(zip(xTestAr, yTestAr)))
+'''
+
+x = np.array([[1, -1, -1, -1, -1, -1, -1, -1],
+              [-1, 1, -1, -1, -1, -1, -1, -1],
+              [-1, -1, 1, -1, -1, -1, -1, -1],
+              [-1, -1, -1, 1, -1, -1, -1, -1],
+              [-1, -1, -1, -1, 1, -1, -1, -1],
+              [-1, -1, -1, -1, -1, 1, -1, -1],
+              [-1, -1, -1, -1, -1, -1, 1, -1],
+              [-1, -1, -1, -1, -1, -1, -1, 1],
+              [-1, -1, -1, -1, -1, -1, -1, -1]])
+y = np.array([1, 0, 1, 0, 1, 0, 1, 0, 0])
+nn = NeuralNetwork((8, 8, 2))
+nn.train(list(zip(x, y)), 200, 9, .01)
+print(nn.evaluate(zip(x, y)))
