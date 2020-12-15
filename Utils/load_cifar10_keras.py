@@ -7,7 +7,7 @@ from pprint import pprint
 
 # Loads the CIFAR-10 Dataset and gets it ready for binary classification
 def load_dataset(num=None):
-    (train_x, train_y), (test_x, test_y) = cifar10.load_data(500)
+    (train_x, train_y), (test_x, test_y) = cifar10.load_data()
 
     train_x, train_y = random_equalize(train_x, train_y, num)
     test_x, test_y = random_equalize(test_x, test_y, num)

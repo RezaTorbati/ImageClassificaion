@@ -3,8 +3,10 @@ import numpy as np
 import random
 import copy
 
+
 def getSigmoid(z):
     return 1 / (1 + np.exp(-z))
+
 
 def getSigmoidPrime(z):
     return getSigmoid(z) * (1 - getSigmoid(z))

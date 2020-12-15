@@ -46,11 +46,11 @@ def neural_network(X, Y, x_test=None, y_test=None, activation_function='sigmoid'
 
         # Backward propagate
         dw = (1 / m) * np.dot((A - Y).T, X)
-        # db = (1/m) * np.sum(A-Y)
+        db = (1/m) * np.sum(A-Y)
 
         # update
         w = w - learning_rate * dw
-        # b = b - learning_rate * db
+        b = b - learning_rate * db
 
         if i % 1000 == 0:
             print("loop:", i)
@@ -98,12 +98,12 @@ if __name__ == "__main__":
     y = np.array([1, 0, 1, 0, 1, 0, 1, 0, 0])
     neural_network(x, y)
 
-    # Run on aruco
-    train_x, train_y, test_x, test_y = load_dataset_aruco(1000)
-    neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
+    # # Run on aruco
+    # train_x, train_y, test_x, test_y = load_dataset_aruco(1000)
+    # neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
 
     # Run on cifar-10
-    train_x, train_y, test_x, test_y = load_dataset()
+    train_x, train_y, test_x, test_y = load_dataset(100)
     train_x, train_y, test_x, test_y = reshape(train_x, train_y, test_x, test_y)
     neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
 
