@@ -10,7 +10,7 @@ def load_dataset(num=None):
     (train_x, train_y), (test_x, test_y) = cifar10.load_data()
 
     train_x, train_y = random_equalize(train_x, train_y, num)
-    test_x, test_y = random_equalize(test_x, test_y, num)
+    test_x, test_y = random_equalize(test_x, test_y)
 
     return train_x, train_y, test_x, test_y
 

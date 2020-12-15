@@ -103,7 +103,7 @@ if __name__ == "__main__":
     # neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
 
     # Run on cifar-10
-    train_x, train_y, test_x, test_y = load_dataset(100)
+    train_x, train_y, test_x, test_y = load_dataset(500)
     train_x, train_y, test_x, test_y = reshape(train_x, train_y, test_x, test_y)
     neural_network(train_x, train_y, test_x, test_y, 'sigmoid')
 
