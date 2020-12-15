@@ -46,7 +46,7 @@ def neural_network(X, Y, x_test=None, y_test=None, activation_function='sigmoid'
 
         # Backward propagate
         dw = (1 / m) * np.dot((A - Y).T, X)
-        db = (1/m) * np.sum(A-Y)
+        db = (1 / m) * np.sum(A-Y)
 
         # update
         w = w - learning_rate * dw
