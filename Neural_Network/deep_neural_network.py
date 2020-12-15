@@ -71,13 +71,19 @@ def error_output(output, layers):
     # layers[-1].bias = .5 * sum(layers[-1].active - output)
 
     for i, layer in reversed(list(enumerate(layers[:-1]))):
-        for j, neuron_error in enumerate(layer.error):
-            forward_error = 0
-            for k, past_neuron_error in enumerate(layers[i + 1].error):
-                forward_error += past_neuron_error * layers[i + 1].weights[k, j]
-            e = layer.active[j] * (1 - layer.active[j]) * forward_error
-            layer.error[j] = e
-            # layer.bias = .5 * sum(layer.active - layers[i + 1].error)
+        z = np.sum(layers[i + 1].weights[:, :].T * layers[i + 1].error, axis=1)
+        layer.error = layer.active * (1 - layer.active) * z
+        # print("z", test_error)
+        # for j, neuron_error in enumerate(layer.error):
+        #     # forward_error = 0
+        #     # for k, past_neuron_error in enumerate(layers[i + 1].error):
+        #     #     forward_error += past_neuron_error * layers[i + 1].weights[k, j]
+        #
+        #     forward_error = np.sum(layers[i + 1].error * layers[i + 1].weights[:, j])
+        #     e = layer.active[j] * (1 - layer.active[j]) * forward_error
+        #     layer.error[j] = e
+        #     # layer.bias = .5 * sum(layer.active - layers[i + 1].error)
+        # print("re", layer.error)
         # print('fast error', layer.error)
 
 
