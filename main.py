@@ -91,21 +91,6 @@ def run_perceptrion():
 
 
 def run_nb_perceptron():
-    print("Running Non-Binary Perceptron on Test Case")
-    # Trivial Example for testing
-    x = np.array([[1, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 1, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 1, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 1, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 1, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 1, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 1, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 1],
-                  [0, 0, 0, 0, 0, 0, 0, 0],
-                  [1, 0, 0, 0, 0, 0, 0, 1]])
-    y = np.array([1, 0, 1, 0, 1, 0, 1, 0, 0, 1])
-    # neural_network(x, y, [x.shape[0], 10, 1], activation_function='tanh', num_interations=50)
-
     print("\nRunning Non-Binary Perceptron on CIFAR-10")
     # Run on cifar-10
     train_x, train_y, test_x, test_y = load_dataset_full()
