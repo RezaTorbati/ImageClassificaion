@@ -114,7 +114,9 @@ def run_nb_perceptron():
 
 
 if __name__ == "__main__":
+    print("\nRunning logistic regression on CIFAR-10")
     cifar_lr()
+    print("\nRunning logistic regression on ARUCO")
     aruco_lr()
     run_perceptrion()
     run_nb_perceptron()
