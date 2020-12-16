@@ -16,10 +16,16 @@ def load_dataset(num=None):
 
 
 def load_dataset_aruco(num=None):
-    true_values = pd.read_csv("../Aruco/True.csv")
-    true_values['class'] = 1
-    false_values = pd.read_csv("../Aruco/False.csv")
-    false_values['class'] = 0
+    try:
+        true_values = pd.read_csv("../Aruco/True.csv")
+        true_values['class'] = 1
+        false_values = pd.read_csv("../Aruco/False.csv")
+        false_values['class'] = 0
+    except:
+        true_values = pd.read_csv("Aruco/True.csv")
+        true_values['class'] = 1
+        false_values = pd.read_csv("Aruco/False.csv")
+        false_values['class'] = 0
 
     aruco_values = true_values.append(false_values)
     aruco_values = aruco_values.sample(frac=1).reset_index(drop=True)
@@ -38,6 +44,9 @@ def load_dataset_aruco(num=None):
     if num:
         train_x = train_x[:num]
         train_y = train_y[:num]
+
+    train_x = train_x / 255
+    test_x = test_x / 255
 
     return train_x, train_y, test_x, test_y
 

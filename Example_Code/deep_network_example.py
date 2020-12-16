@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from Utils.reshape_data import reshape_example
-from Utils.load_cifar10_keras import load_dataset
+from Utils.load_cifar10_keras import load_dataset, load_dataset_aruco
 import h5py
 
 '''from: https://towardsdatascience.com/how-to-build-a-deep-neural-network-without-a-framework-5d46067754d5
@@ -483,10 +483,19 @@ def L_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, 
 
 
 if __name__ == "__main__":
-    layers_dims = [3072, 20, 7, 5, 1]
-
-    train_x, train_y, test_x, test_y = load_dataset(250)
+    train_x, train_y, test_x, test_y = load_dataset()
     train_x, train_y, test_x, test_y = reshape_example(train_x, train_y, test_x, test_y)
+    print(train_x.shape, train_y.shape, test_x.shape, test_y.shape)
+
+    train_x, train_y, test_x, test_y = load_dataset_aruco()
+    # train_x, train_y, test_x, test_y = reshape_example(train_x, train_y, test_x, test_y, reshape_y=False)
+    train_y = np.expand_dims(train_y, axis=1)
+    test_y = np.expand_dims(test_y, axis=1)
+    print(train_x.T.shape, train_y.shape, test_x.T.shape, test_y.shape)
+    train_x = train_x.T
+    test_x = test_x.T
+
+    layers_dims = [1024, 20, 7, 5, 1]
 
     # Print training progess and show loss graph
     parameters = L_layer_model(train_x, train_y.T, layers_dims, num_iterations=2500, print_cost=True)

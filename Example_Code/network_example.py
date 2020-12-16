@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 from Utils.reshape_data import reshape_example
-from Utils.load_cifar10_keras import load_dataset
+from Utils.load_cifar10_keras import load_dataset, load_dataset_aruco
 import random
 
 '''From: 
@@ -109,7 +109,7 @@ def model(X_train, Y_train, X_test, Y_test, num_iterations=2500, learning_rate=0
 
 
 if __name__ == "__main__":
-    train_x, train_y, test_x, test_y = load_dataset(250)
+    train_x, train_y, test_x, test_y = load_dataset_aruco()
     train_x, train_y, test_x, test_y = reshape_example(train_x, train_y, test_x, test_y, reshape_y=False)
 
     d = model(train_x, train_y, test_x, test_y, num_iterations=2000, learning_rate=.005, print_cost=True)
